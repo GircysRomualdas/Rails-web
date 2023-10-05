@@ -5,10 +5,15 @@ class PasswordsController < ApplicationController
 
     end
     def update
-        if Current.user.update(password_params)
-            redirect_to root_path, notice: "Password updated!"
-        else
+        if password_params[:password].empty? || password_params[:password_confirmation].empty?
+            flash.now[:alert] = "Please enter both password and password confirmation."
             render :edit
+        else
+            if Current.user.update(password_params)
+                redirect_to root_path, notice: "Password updated!"
+            else
+                render :edit
+            end
         end
     end
 
